@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const API_URL = 'http://localhost:3000/api';
+    const API_URL = '/api';
     let allQueries = [];
     let activeTagFilter = null;
 

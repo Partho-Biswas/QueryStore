@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const signupResponse = await fetch('http://localhost:3000/signup', {
+                const signupResponse = await fetch('/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Automatically log the user in after successful signup
-                const loginResponse = await fetch('http://localhost:3000/login', {
+                const loginResponse = await fetch('/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const response = await fetch('http://localhost:3000/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password }),
