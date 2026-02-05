@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/public/queries/${shareId}`);
+            const response = await fetch(`/api/public/queries/${shareId}`);
             if (!response.ok) {
                 throw new Error('Shared query not found or access denied.');
             }

@@ -1,5 +1,4 @@
-# Ignore the .env file which contains secrets
-.env
 
-# Ignore Node.js modules folder
+.env
 node_modules
+ToDo
