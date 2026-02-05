@@ -1,79 +1,170 @@
 # QueryStore
 
-QueryStore is a simple web application for saving and managing text-based queries or notes. It features a user authentication system and stores user-specific data securely in a cloud database.
+![QueryStore Logo](https://cdn-icons-png.flaticon.com/512/1265/1265531.png)
+
+QueryStore is a secure and efficient web application designed for developers and data professionals to save, manage, and share text-based queries or code snippets. It provides a personalized workspace to store your frequently used SQL queries, code snippets, or any text-based notes, complete with tagging, search functionality, and secure sharing options.
+
+## Live Demo
+Experience QueryStore live: [https://querystore.onrender.com](https://querystore.onrender.com)
 
 ---
 
-## Architecture
+## ✨ Features
 
-This project is a full-stack application with the following components:
-
-1.  **Frontend:** A client-side interface built with plain HTML, CSS, and JavaScript. It handles user input and interaction. All frontend files (`.html`, `.css`, `auth.js`, `app.js`) are static.
-2.  **Backend:** A Node.js server built with the Express framework. This server provides a RESTful API for user authentication and data management. It connects to a MongoDB database to persist data.
-3.  **Database:** A cloud-hosted MongoDB database managed via MongoDB Atlas. All user information is stored here.
+*   **User Authentication:** Secure sign-up and login system using JWT (JSON Web Tokens).
+*   **CRUD Operations:** Create, Read, Update, and Delete your personal queries.
+*   **Tagging System:** Organize queries with multiple tags for easy categorization and filtering.
+*   **Full-Text Search:** Quickly find queries by searching their title or content.
+*   **Code Highlighting:** Syntax highlighting for stored queries (using Highlight.js) to improve readability.
+*   **Shareable Links:** Generate unique, public links for individual queries to share them securely.
+*   **Responsive Design:** User-friendly interface built with Bootstrap 5.
 
 ---
 
-## Local Development Setup
+## 🚀 Technologies Used
 
-Follow these steps to set up and run the project on your local machine.
+**Frontend:**
+*   **HTML5, CSS3, JavaScript:** Core web technologies.
+*   **Bootstrap 5:** For responsive and modern UI components.
+*   **Highlight.js:** For syntax highlighting of code snippets.
+
+**Backend:**
+*   **Node.js:** JavaScript runtime environment.
+*   **Express.js:** Fast, unopinionated, minimalist web framework for Node.js.
+*   **Mongoose:** MongoDB object data modeling (ODM) for Node.js.
+
+**Database:**
+*   **MongoDB Atlas:** Cloud-hosted NoSQL database.
+
+**Authentication & Security:**
+*   **bcrypt:** For hashing user passwords.
+*   **jsonwebtoken:** For creating and verifying JSON Web Tokens for authentication.
+*   **CORS:** Middleware to enable Cross-Origin Resource Sharing.
+
+---
+
+## 📐 Architecture
+
+QueryStore follows a classic client-server architecture:
+
+1.  **Frontend (Client-side):** A single-page application built with plain HTML, CSS, and JavaScript. It communicates with the backend API to perform all operations.
+2.  **Backend (Server-side):** A Node.js Express server that exposes a RESTful API. It handles:
+    *   User authentication (signup, login).
+    *   CRUD operations for queries.
+    *   Interaction with the MongoDB database.
+    *   Token-based authorization for protected routes.
+3.  **Database:** MongoDB Atlas stores user information and query data.
+
+---
+
+## 📸 Screenshots
+
+### Login / Signup Page
+![Login/Signup Screenshot](https://via.placeholder.com/800x400?text=Login+%26+Signup+Page)
+*(Screenshot of `auth.html`)*
+
+### Main Dashboard (Query List)
+![Main Dashboard Screenshot](https://via.placeholder.com/800x400?text=Main+Dashboard)
+*(Screenshot of `index.html` showing queries, tags, and search)*
+
+### Edit Query Modal
+![Edit Query Screenshot](https://via.placeholder.com/800x400?text=Edit+Query+Modal)
+*(Screenshot of the edit modal pop-up)*
+
+### Shareable Query View
+![Shareable Query Screenshot](https://via.placeholder.com/800x400?text=Shareable+Query+Page)
+*(Screenshot of `share.html` displaying a public query)*
+
+---
+
+## 💻 Local Development Setup
+
+Follow these steps to get QueryStore up and running on your local machine.
 
 ### Prerequisites
 
-*   [Node.js](https://nodejs.org/) installed on your system.
-*   A code editor (e.g., VS Code).
+*   **Node.js (>=18.0.0):** Download and install from [nodejs.org](https://nodejs.org/).
+*   **A code editor:** (e.g., VS Code).
 
-### 1. Install Dependencies
+### 1. Clone the Repository
 
-Open a terminal in the project root directory and run the following command to install the required Node.js packages:
+```bash
+git clone https://github.com/Partho-Biswas/QueryStore
+cd QueryStore
+```
+
+### 2. Install Dependencies
+
+In the project root directory, run:
 
 ```bash
 npm install
 ```
 
-### 2. Set Up MongoDB Atlas
+### 3. Set Up MongoDB Atlas
 
-This application requires a connection to a MongoDB Atlas database to function.
+QueryStore requires a MongoDB database. We recommend using [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) for a free cloud-hosted solution.
 
-1.  **Create an Account:** Sign up for a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register).
-2.  **Create a Free Cluster:** Follow the instructions to create a new "Shared" (M0) cluster. The default settings are sufficient.
+1.  **Create an Account:** Sign up for a free account.
+2.  **Create a Free Cluster:** Follow the Atlas UI to create a new "Shared" (M0) cluster.
 3.  **Configure Access:**
-    *   **Database User:** Under "Database Access", create a new database user with a secure password.
-    *   **Network Access:** Under "Network Access", add a new IP address entry and select "Allow Access From Anywhere" (`0.0.0.0/0`).
-4.  **Get Connection String:** From the "Database" view, click "Connect" -> "Drivers" and copy your unique connection string.
+    *   Create a new **Database User** with a strong password.
+    *   Configure **Network Access** to "Allow Access From Anywhere" (`0.0.0.0/0`) for development purposes (be more restrictive in production).
+    *   **Get Connection String:** Obtain your unique connection string (looks like `mongodb+srv://user:<password>@cluster.xxxxx.mongodb.net/...`).
 
-### 3. Configure Environment Variables
+### 4. Configure Environment Variables
 
-1.  Create a file named `.env` in the root of the project directory.
-2.  Add the following line to the `.env` file, pasting your connection string and replacing `<password>` with your actual database user password:
+Create a file named `.env` in the root of your project directory and add the following:
 
-    ```
-    MONGO_URI=mongodb+srv://your_username:<password>@your_cluster.xxxxx.mongodb.net/?retryWrites=true&w=majority
-    ```
-3.  Ensure the `.gitignore` file contains a line for `.env` to prevent committing secrets to version control.
+```env
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_secret_jwt_key
+```
+*   Replace `your_mongodb_atlas_connection_string` with the URI obtained from MongoDB Atlas. Remember to substitute `<password>` in the URI with your actual database user password.
+*   Replace `your_secret_jwt_key` with a long, random string. You can generate one using `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+
+**Important:** Ensure `.env` is included in your `.gitignore` to prevent sensitive information from being committed to version control.
 
 ---
 
-## Running the Application
-
-To run the application, you must start the backend server.
+## ▶️ Running the Application
 
 ### 1. Start the Backend Server
 
-In your terminal, run the following command from the project root:
+Open a terminal in the project root and run:
 
 ```bash
-node server.js
+npm start
+# or node server.js
 ```
-
-You should see messages confirming that the server is running and successfully connected to MongoDB Atlas. The server will be listening on `http://localhost:3000`.
+You should see console messages indicating the server is running on `http://localhost:3000` and connected to MongoDB Atlas.
 
 ### 2. Launch the Frontend
 
-Open the `auth.html` or `index.html` file in your web browser. The application will now be functional and will communicate with your local backend server.
+Open `auth.html` or `index.html` directly in your web browser. The frontend will communicate with your local backend server.
 
 ---
 
-## Deployment Notes
+## 🧪 Testing
 
-This is a full-stack application and requires a hosting environment that can run a Node.js server (e.g., Render, Vercel, Heroku). It cannot be deployed on a static-only host like GitHub Pages. When deploying, the `MONGO_URI` environment variable must be set in the hosting service's dashboard.
+The project includes unit tests for the backend. To run them:
+
+```bash
+npm test
+```
+
+---
+
+## ☁️ Deployment Notes
+
+This is a full-stack application and requires a hosting environment that supports Node.js. An example deployment can be found on Render: [https://querystore.onrender.com](https://querystore.onrender.com). It cannot be deployed on static-only hosts like GitHub Pages. When deploying, ensure your `MONGO_URI` and `JWT_SECRET` environment variables are securely configured in your hosting service's dashboard.
+
+---
+
+## 📄 License
+
+This project is licensed under the ISC License. See the `LICENSE` file for details.
+
+---
+
+## © Copyright 2026 "Partho Biswas"
