@@ -1,6 +1,6 @@
 # QueryStore
 
-<img width="256" height="256" alt="image" src="https://cdn-icons-png.flaticon.com/512/1265/1265531.png" />
+<img width="256" height="256" style="border: 2px solid grey;" alt="image" src="https://cdn-icons-png.flaticon.com/512/1265/1265531.png" />
 
 QueryStore is a secure and efficient web application designed for developers and data professionals to save, manage, and share text-based queries or code snippets. It provides a personalized workspace to store your frequently used SQL queries, code snippets, or any text-based notes, complete with tagging, search functionality, and secure sharing options.
 
@@ -60,24 +60,24 @@ QueryStore follows a classic client-server architecture:
 ## 📸 Screenshots
 
 ### Login 
-<img width="1080" alt="image" src="https://github.com/user-attachments/assets/8d1abe20-b7c8-49e4-a89c-24e00eced50f" />
+<img width="1080" alt="image" style="border: 2px solid grey;" src="https://github.com/user-attachments/assets/8d1abe20-b7c8-49e4-a89c-24e00eced50f" />
 *(Screenshot of `auth.html (for Login)`)*
 
 ### Signup Page
-<img width="1080" alt="image" src="https://github.com/user-attachments/assets/dd69521a-def0-4e46-ac2c-2731b568051e" />
+<img width="1080" alt="image" style="border: 2px solid grey;" src="https://github.com/user-attachments/assets/dd69521a-def0-4e46-ac2c-2731b568051e" />
 *(Screenshot of `auth.html (for Signup)`)*
 
 ### Main Dashboard (Query List)
-<img width="1080" alt="image" src="https://github.com/user-attachments/assets/5d6ab980-b331-443c-95a7-4caf3f5fff31" />
+<img width="1080" alt="image" style="border: 2px solid grey;" src="https://github.com/user-attachments/assets/5d6ab980-b331-443c-95a7-4caf3f5fff31" />
 *(Screenshot of `index.html` showing queries, tags, and search)*
 
 ### Edit Query Modal
-<img width="1080" alt="image" src="https://github.com/user-attachments/assets/41d8636c-80e1-4891-9258-96b3ccc25eec" />
+<img width="500" alt="image" style="border: 2px solid grey;" src="https://github.com/user-attachments/assets/41d8636c-80e1-4891-9258-96b3ccc25eec" />
 *(Screenshot of the edit modal pop-up)*
 
 ### Shareable Query View
-<img width="711" height="244" alt="image" src="https://github.com/user-attachments/assets/13695e39-2911-4a21-b352-1eb9e718bbe4" />
-<img width="1582" height="607" alt="image" src="https://github.com/user-attachments/assets/da8b53b5-abc0-4b2c-9bbd-57dea9426ed9" />
+<img width="400" alt="image" style="border: 2px solid grey;" src="https://github.com/user-attachments/assets/13695e39-2911-4a21-b352-1eb9e718bbe4" />
+<img width="1080" alt="image" style="border: 2px solid grey;" src="https://github.com/user-attachments/assets/da8b53b5-abc0-4b2c-9bbd-57dea9426ed9" />
 
 *(Screenshot of `share.html` displaying a public query)*
 
