@@ -59,20 +59,26 @@ QueryStore follows a classic client-server architecture:
 
 ## 📸 Screenshots
 
-### Login / Signup Page
-![Login/Signup Screenshot](https://via.placeholder.com/800x400?text=Login+%26+Signup+Page)
-*(Screenshot of `auth.html`)*
+### Login 
+![Login/Signup Screenshot](<img width="1919" height="835" alt="image" src="https://github.com/user-attachments/assets/8d1abe20-b7c8-49e4-a89c-24e00eced50f" />)
+*(Screenshot of `auth.html (for Login)`)*
+
+### Signup Page
+![Login/Signup Screenshot](<img width="1919" height="835" alt="image" src="https://github.com/user-attachments/assets/dd69521a-def0-4e46-ac2c-2731b568051e" />)
+*(Screenshot of `auth.html (for Signup)`)*
 
 ### Main Dashboard (Query List)
-![Main Dashboard Screenshot](https://via.placeholder.com/800x400?text=Main+Dashboard)
+![Main Dashboard Screenshot](<img width="1896" height="844" alt="image" src="https://github.com/user-attachments/assets/5d6ab980-b331-443c-95a7-4caf3f5fff31" />)
 *(Screenshot of `index.html` showing queries, tags, and search)*
 
 ### Edit Query Modal
-![Edit Query Screenshot](https://via.placeholder.com/800x400?text=Edit+Query+Modal)
+![Edit Query Screenshot](<img width="1012" height="779" alt="image" src="https://github.com/user-attachments/assets/41d8636c-80e1-4891-9258-96b3ccc25eec" />)
 *(Screenshot of the edit modal pop-up)*
 
 ### Shareable Query View
-![Shareable Query Screenshot](https://via.placeholder.com/800x400?text=Shareable+Query+Page)
+![Shareable Query Screenshot](<img width="711" height="244" alt="image" src="https://github.com/user-attachments/assets/13695e39-2911-4a21-b352-1eb9e718bbe4" />
+<img width="1582" height="607" alt="image" src="https://github.com/user-attachments/assets/da8b53b5-abc0-4b2c-9bbd-57dea9426ed9" />)
+
 *(Screenshot of `share.html` displaying a public query)*
 
 ---
