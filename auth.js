@@ -9,6 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginErrorDiv = document.getElementById('login-error');
     const signupErrorDiv = document.getElementById('signup-error');
 
+    // Reset Password Elements
+    const resetForm = document.getElementById('reset-form');
+    const resetUsernameInput = document.getElementById('reset-username');
+    const resetPasswordInput = document.getElementById('reset-password');
+    const resetErrorDiv = document.getElementById('reset-error');
+    const resetSuccessDiv = document.getElementById('reset-success');
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+    const resetTabButton = document.getElementById('pills-reset-tab');
+
     // Redirect if already logged in
     if (localStorage.getItem('token')) {
         window.location.href = 'index.html';
@@ -22,6 +31,59 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Event Listeners ---
+
+    // Forgot Password Link
+    if (forgotPasswordLink && resetTabButton) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const resetTab = new bootstrap.Tab(resetTabButton);
+            resetTab.show();
+        });
+    }
+
+    // Reset Password Form Submission
+    if (resetForm) {
+        resetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            resetErrorDiv.textContent = '';
+            resetSuccessDiv.textContent = '';
+
+            const username = resetUsernameInput.value.trim();
+            const newPassword = resetPasswordInput.value;
+
+            if (!username || !newPassword) {
+                resetErrorDiv.textContent = 'Both fields are required.';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, newPassword }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resetSuccessDiv.textContent = data.message || 'Password reset successful!';
+                    resetForm.reset();
+                    // Optional: Switch back to login after a delay
+                    setTimeout(() => {
+                        const loginTabButton = document.getElementById('pills-login-tab');
+                        const loginTab = new bootstrap.Tab(loginTabButton);
+                        loginTab.show();
+                        resetSuccessDiv.textContent = '';
+                    }, 2000);
+                } else {
+                    const errorData = await response.json();
+                    resetErrorDiv.textContent = errorData.message || 'Error resetting password.';
+                }
+            } catch (error) {
+                console.error('Error during password reset:', error);
+                resetErrorDiv.textContent = 'Could not connect to the server.';
+            }
+        });
+    }
 
     // Signup Form Submission
     if (signupForm) {

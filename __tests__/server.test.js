@@ -75,4 +75,43 @@ describe('Auth API', () => {
             expect(res.statusCode).toEqual(404);
         });
     });
+
+    describe('POST /api/reset-password', () => {
+        beforeEach(async () => {
+            const salt = await require('bcrypt').genSalt(10);
+            const passwordHash = await require('bcrypt').hash('oldpassword', salt);
+            await new User({ username: 'testuser', passwordHash }).save();
+        });
+
+        it('should reset password for an existing user', async () => {
+            const res = await request(app)
+                .post('/api/reset-password')
+                .send({
+                    username: 'testuser',
+                    newPassword: 'newpassword123'
+                });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.message).toBe('Password reset successfully.');
+
+            // Verify login with new password
+            const loginRes = await request(app)
+                .post('/login')
+                .send({
+                    username: 'testuser',
+                    passwordHash: 'newpassword123'
+                });
+            expect(loginRes.statusCode).toEqual(200);
+        });
+
+        it('should return 404 for a non-existent user', async () => {
+            const res = await request(app)
+                .post('/api/reset-password')
+                .send({
+                    username: 'nonexistent',
+                    newPassword: 'newpassword123'
+                });
+            expect(res.statusCode).toEqual(404);
+            expect(res.body.message).toBe('Username not found.');
+        });
+    });
 });

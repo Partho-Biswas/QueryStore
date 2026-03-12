@@ -114,6 +114,33 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// POST /api/reset-password - Reset a user's password (by username)
+app.post('/api/reset-password', async (req, res) => {
+    const { username, newPassword } = req.body;
+
+    if (!username || !newPassword) {
+        return res.status(400).json({ message: 'Username and new password are required.' });
+    }
+
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(404).json({ message: 'Username not found.' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(newPassword, salt);
+
+        user.passwordHash = passwordHash;
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successfully.' });
+    } catch (error) {
+        console.error('Error during password reset:', error);
+        res.status(500).json({ message: 'An error occurred during password reset.' });
+    }
+});
+
 // --- Public API Endpoint ---
 // GET /api/public/queries/:shareId - Get a shared query
 app.get('/api/public/queries/:shareId', async (req, res) => {
