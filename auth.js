@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
-    const loginUsernameInput = document.getElementById('login-username');
+    const loginIdentifierInput = document.getElementById('login-identifier');
     const loginPasswordInput = document.getElementById('login-password');
     const signupUsernameInput = document.getElementById('signup-username');
+    const signupEmailInput = document.getElementById('signup-email');
     const signupPasswordInput = document.getElementById('signup-password');
     const signupConfirmPasswordInput = document.getElementById('signup-confirm-password');
     const loginErrorDiv = document.getElementById('login-error');
@@ -11,12 +12,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Reset Password Elements
     const resetForm = document.getElementById('reset-form');
-    const resetUsernameInput = document.getElementById('reset-username');
+    const resetEmailInput = document.getElementById('reset-email');
     const resetPasswordInput = document.getElementById('reset-password');
     const resetErrorDiv = document.getElementById('reset-error');
     const resetSuccessDiv = document.getElementById('reset-success');
     const forgotPasswordLink = document.getElementById('forgot-password-link');
+    const backToLoginLink = document.getElementById('back-to-login-link');
     const resetTabButton = document.getElementById('pills-reset-tab');
+    const loginTabButton = document.getElementById('pills-login-tab');
+
+    // Reset all forms and messages on page load for a "clean" state
+    const clearAllForms = () => {
+        if (loginForm) loginForm.reset();
+        if (signupForm) signupForm.reset();
+        if (resetForm) resetForm.reset();
+        if (loginErrorDiv) loginErrorDiv.textContent = '';
+        if (signupErrorDiv) signupErrorDiv.textContent = '';
+        if (resetErrorDiv) resetErrorDiv.textContent = '';
+        if (resetSuccessDiv) resetSuccessDiv.textContent = '';
+    };
+
+    clearAllForms();
+
+    // Clear forms whenever any tab is shown (Login, Signup, or Reset)
+    document.querySelectorAll('button[data-bs-toggle="pill"]').forEach(tabEl => {
+        tabEl.addEventListener('shown.bs.tab', () => {
+            clearAllForms();
+        });
+    });
 
     // Redirect if already logged in
     if (localStorage.getItem('token')) {
@@ -41,17 +64,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Back to Login Link
+    if (backToLoginLink && loginTabButton) {
+        backToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const loginTab = new bootstrap.Tab(loginTabButton);
+            loginTab.show();
+        });
+    }
+
     // Reset Password Form Submission
     if (resetForm) {
         resetForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Two-step confirmation via popup
+            if (!confirm('Are you sure you want to reset your password? This action cannot be undone.')) {
+                return;
+            }
+
+            // Proceed with reset
             resetErrorDiv.textContent = '';
             resetSuccessDiv.textContent = '';
 
-            const username = resetUsernameInput.value.trim();
+            const email = resetEmailInput.value.trim();
             const newPassword = resetPasswordInput.value;
 
-            if (!username || !newPassword) {
+            if (!email || !newPassword) {
                 resetErrorDiv.textContent = 'Both fields are required.';
                 return;
             }
@@ -60,16 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/api/reset-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, newPassword }),
+                    body: JSON.stringify({ email, newPassword }),
                 });
 
                 if (response.ok) {
                     const data = await response.json();
                     resetSuccessDiv.textContent = data.message || 'Password reset successful!';
                     resetForm.reset();
-                    // Optional: Switch back to login after a delay
+                    
+                    // Switch back to login after a delay
                     setTimeout(() => {
-                        const loginTabButton = document.getElementById('pills-login-tab');
                         const loginTab = new bootstrap.Tab(loginTabButton);
                         loginTab.show();
                         resetSuccessDiv.textContent = '';
@@ -92,10 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
             signupErrorDiv.textContent = '';
 
             const username = signupUsernameInput.value.trim();
+            const email = signupEmailInput.value.trim();
             const password = signupPasswordInput.value;
             const confirmPassword = signupConfirmPasswordInput.value;
 
-            if (!username || !password || !confirmPassword) {
+            if (!username || !email || !password || !confirmPassword) {
                 signupErrorDiv.textContent = 'All fields are required.';
                 return;
             }
@@ -109,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const signupResponse = await fetch('/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password }),
+                    body: JSON.stringify({ username, email, password }),
                 });
 
                 if (!signupResponse.ok) {
@@ -145,10 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             loginErrorDiv.textContent = '';
 
-            const username = loginUsernameInput.value.trim();
+            const identifier = loginIdentifierInput.value.trim();
             const password = loginPasswordInput.value;
 
-            if (!username || !password) {
+            if (!identifier || !password) {
                 loginErrorDiv.textContent = 'Both fields are required.';
                 return;
             }
@@ -157,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password }),
+                    body: JSON.stringify({ identifier, password }),
                 });
 
                 if (response.ok) {

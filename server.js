@@ -24,7 +24,8 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 
 // --- Mongoose Schema & Model ---
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true, trim: true },
+    username: { type: String, required: true, unique: true, trim: true, lowercase: true },
+    email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     passwordHash: { type: String, required: true },
 });
 
@@ -48,22 +49,28 @@ const Query = mongoose.model('Query', querySchema);
 
 // POST /signup - Create a new user
 app.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
+    let { username, email, password } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required.' });
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'Username, email, and password are required.' });
     }
 
+    username = username.toLowerCase().trim();
+    email = email.toLowerCase().trim();
+
     try {
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
-            return res.status(409).json({ message: 'Username already exists.' });
+            if (existingUser.username === username) {
+                return res.status(409).json({ message: 'Username already exists.' });
+            }
+            return res.status(409).json({ message: 'Email already exists.' });
         }
 
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const newUser = new User({ username, passwordHash });
+        const newUser = new User({ username, email, passwordHash });
         await newUser.save();
         res.status(201).json({ message: 'User created successfully.', user: { username: newUser.username } });
     } catch (error) {
@@ -74,14 +81,23 @@ app.post('/signup', async (req, res) => {
 
 // POST /login - Authenticate a user and return a JWT
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    let { identifier, password } = req.body; // 'identifier' can be username or email
 
-    if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required.' });
+    if (!identifier || !password) {
+        return res.status(400).json({ message: 'Username/Email and password are required.' });
     }
 
+    identifier = identifier.toLowerCase().trim();
+
     try {
-        const user = await User.findOne({ username });
+        // Find user by username OR email
+        const user = await User.findOne({ 
+            $or: [
+                { username: identifier },
+                { email: identifier }
+            ] 
+        });
+
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials.' });
         }
@@ -114,18 +130,20 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// POST /api/reset-password - Reset a user's password (by username)
+// POST /api/reset-password - Reset a user's password (by email)
 app.post('/api/reset-password', async (req, res) => {
-    const { username, newPassword } = req.body;
+    let { email, newPassword } = req.body;
 
-    if (!username || !newPassword) {
-        return res.status(400).json({ message: 'Username and new password are required.' });
+    if (!email || !newPassword) {
+        return res.status(400).json({ message: 'Email and new password are required.' });
     }
 
+    email = email.toLowerCase().trim();
+
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ message: 'Username not found.' });
+            return res.status(404).json({ message: 'Email not found.' });
         }
 
         const salt = await bcrypt.genSalt(10);
