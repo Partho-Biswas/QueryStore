@@ -9,6 +9,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupConfirmPasswordInput = document.getElementById('signup-confirm-password');
     const loginErrorDiv = document.getElementById('login-error');
     const signupErrorDiv = document.getElementById('signup-error');
+    const togglePassword = document.getElementById('toggle-password');
+    const rememberMe = document.getElementById('remember-me');
+
+    // Password visibility toggle
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function () {
+            const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            loginPasswordInput.setAttribute('type', type);
+            // Toggle the icon
+            const icon = this.querySelector('i');
+            icon.classList.toggle('bi-eye-slash');
+            icon.classList.toggle('bi-eye');
+        });
+    }
+    
+    // Load saved credentials if they exist
+    if (localStorage.getItem('rememberMe') === 'true') {
+        loginIdentifierInput.value = localStorage.getItem('loginIdentifier') || '';
+        loginPasswordInput.value = localStorage.getItem('loginPassword') || '';
+        rememberMe.checked = true;
+    }
 
     // Reset Password Elements
     const resetForm = document.getElementById('reset-form');
@@ -202,6 +223,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     const data = await response.json();
+                    
+                    if (rememberMe.checked) {
+                        localStorage.setItem('rememberMe', 'true');
+                        localStorage.setItem('loginIdentifier', identifier);
+                        localStorage.setItem('loginPassword', password);
+                    } else {
+                        localStorage.removeItem('rememberMe');
+                        localStorage.removeItem('loginIdentifier');
+                        localStorage.removeItem('loginPassword');
+                    }
+
                     handleLoginSuccess(data);
                 } else {
                     const errorData = await response.json();
