@@ -38,6 +38,7 @@ const querySchema = new mongoose.Schema({
     tags: [{ type: String, trim: true }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     isPublic: { type: Boolean, default: false },
+    isPinned: { type: Boolean, default: false },
     shareId: { type: String, unique: true, sparse: true }, // sparse index allows multiple nulls
     createdAt: { type: Date, default: Date.now }
 });
@@ -187,11 +188,28 @@ const auth = require('./authMiddleware');
 // GET /api/queries - Get all queries for the logged-in user
 app.get('/api/queries', auth, async (req, res) => {
     try {
-        const queries = await Query.find({ user: req.user.id }).sort({ createdAt: -1 });
+        // Sort by isPinned (descending, so true comes first) then createdAt (descending)
+        const queries = await Query.find({ user: req.user.id }).sort({ isPinned: -1, createdAt: -1 });
         res.status(200).json(queries);
     } catch (error) {
         console.error('Error fetching queries:', error);
         res.status(500).json({ message: 'Error fetching queries.' });
+    }
+});
+
+// PATCH /api/queries/:id/pin - Toggle pin status
+app.patch('/api/queries/:id/pin', auth, async (req, res) => {
+    try {
+        const query = await Query.findOne({ _id: req.params.id, user: req.user.id });
+        if (!query) {
+            return res.status(404).json({ message: 'Query not found or user not authorized.' });
+        }
+        query.isPinned = !query.isPinned;
+        await query.save();
+        res.status(200).json(query);
+    } catch (error) {
+        console.error('Error pinning query:', error);
+        res.status(500).json({ message: 'Error pinning query.' });
     }
 });
 

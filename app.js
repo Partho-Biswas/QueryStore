@@ -34,6 +34,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allQueries = [];
     let activeTagFilter = null;
 
+    // --- Theme Toggle Logic ---
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+    });
+
+    function updateThemeIcon(theme) {
+        const icon = themeToggle.querySelector('i');
+        if (theme === 'light') {
+            icon.className = 'bi bi-sun-fill';
+        } else {
+            icon.className = 'bi bi-moon-stars';
+        }
+    }
+
     const authHeaders = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -131,6 +153,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    const togglePin = async (queryId) => {
+        try {
+            const response = await fetch(`${API_URL}/queries/${queryId}/pin`, {
+                method: 'PATCH',
+                headers: authHeaders,
+            });
+            if (!response.ok) throw new Error('Failed to toggle pin.');
+            fetchAllData();
+        } catch (error) {
+            console.error(error.message);
+            alert('Failed to pin/unpin the query.');
+        }
+    };
+
     const shareQuery = async (queryId) => {
         try {
             const response = await fetch(`${API_URL}/queries/${queryId}/share`, {
@@ -159,15 +195,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         queries.forEach(query => {
             const queryItem = document.createElement('div');
-            queryItem.className = 'list-group-item';
+            queryItem.className = `list-group-item ${query.isPinned ? 'border-primary' : ''}`;
             queryItem.dataset.id = query._id;
             
             const tagsHtml = (query.tags || []).map(tag => `<span class="badge bg-secondary me-1">${escapeHTML(tag)}</span>`).join('');
+            const pinClass = query.isPinned ? 'active text-warning' : 'text-muted';
 
             queryItem.innerHTML = `
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">${escapeHTML(query.title)}</h5>
-                    <small>${new Date(query.createdAt).toLocaleString()}</small>
+                <div class="d-flex w-100 justify-content-between align-items-start">
+                    <div>
+                        <h5 class="mb-1">
+                            ${query.isPinned ? '<i class="bi bi-pin-angle-fill text-primary me-2 pinned-icon"></i>' : ''}
+                            ${escapeHTML(query.title)}
+                        </h5>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-link p-0 me-3 pin-btn ${pinClass}" title="${query.isPinned ? 'Unpin' : 'Pin'}">
+                            <i class="bi ${query.isPinned ? 'bi-pin-angle-fill' : 'bi-pin-angle'}"></i>
+                        </button>
+                        <small>${new Date(query.createdAt).toLocaleString()}</small>
+                    </div>
                 </div>
                 <div class="mb-2">${tagsHtml}</div>
                 <div class="query-content mt-2">
@@ -232,6 +279,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (target.classList.contains('delete-btn')) {
             deleteQuery(queryId);
+        } else if (target.classList.contains('pin-btn')) {
+            togglePin(queryId);
         } else if (target.classList.contains('copy-btn')) {
             const queryText = queryItem.querySelector('.query-content code').innerText;
             navigator.clipboard.writeText(queryText).then(() => {

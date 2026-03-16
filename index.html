@@ -12,7 +12,7 @@
     <script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <img src="https://cdn-icons-png.flaticon.com/512/1265/1265531.png" alt="QueryStore Logo" height="24" class="me-2">
@@ -21,7 +21,10 @@
                     <span id="welcome-message" class="ms-sm-2 badge bg-primary mt-1 mt-sm-0" style="font-size: 0.75rem;"></span>
                 </div>
             </a>
-            <div class="ms-auto">
+            <div class="ms-auto d-flex align-items-center">
+                <button class="btn btn-sm btn-outline-light me-2" id="theme-toggle" title="Toggle Light/Dark Mode">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
                 <button class="btn btn-sm btn-outline-light" id="logout-button">
                     <i class="bi bi-box-arrow-right"></i> Logout
                 </button>
