@@ -1,7 +1,21 @@
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     background: linear-gradient(to left top, #1a2a3a, #2c3e50, #34495e, #4a5c6e); /* 4-color dark gradient background */
     color: #ecf0f1; /* Light text color */
     min-height: 100vh; /* Ensure background covers full viewport height */
+}
+
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.container, .container-fluid {
+    overflow-x: hidden;
 }
 
 /* Navbar adjustments for dark theme */
