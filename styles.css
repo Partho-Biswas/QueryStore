@@ -1,35 +1,67 @@
 :root {
-    /* Dark Theme (Default) - Sophisticated Slate/Navy */
-    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Deep Slate to Slate 800 */
-    --nav-bg: rgba(15, 23, 42, 0.8); /* Tinted deep slate */
-    --card-bg: rgba(30, 41, 59, 0.7); /* Slate 800 */
+    /* Dark Theme (Default) - Deep Space */
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --nav-bg: rgba(15, 23, 42, 0.8);
+    --card-bg: rgba(30, 41, 59, 0.7);
     --item-bg: rgba(30, 41, 59, 0.85);
     --content-bg: #0f172a;
     --input-bg: #1e293b;
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
+    --text-main: rgb(92, 118, 229); /* Requested Blue for Dark Mode */
+    --text-muted: #cbd5e1;
     --border-color: rgba(255, 255, 255, 0.1);
     --input-border: #334155;
-    --code-color: #38bdf8; /* Sky Blue */
+    --code-color: #38bdf8;
     --pre-bg: #0b1120;
     --pre-border: #1e293b;
 }
 
 [data-theme="light"] {
-    /* Ultra Charming Cotton Candy Theme - Tinted */
+    /* Ultra Charming Cotton Candy Theme */
     --bg-gradient: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-    --nav-bg: rgba(224, 195, 252, 0.8); /* Tinted to match background start */
+    --nav-bg: rgba(224, 195, 252, 0.8);
     --card-bg: rgba(255, 255, 255, 0.6);
     --item-bg: rgba(255, 255, 255, 0.8);
     --content-bg: #ffffff;
     --input-bg: #ffffff;
-    --text-main: #2d3436;
-    --text-muted: #636e72;
+    --text-main: #1e1b4b;
+    --text-muted: rgb(0, 0, 0); /* Requested Black for Light Mode */
     --border-color: rgba(255, 255, 255, 0.4);
     --input-border: rgba(255, 255, 255, 0.5);
-    --code-color: #6c5ce7; /* Vibrant Purple */
+    --code-color: #6c5ce7;
     --pre-bg: #f5f3ff;
     --pre-border: #ddd6fe;
+}
+
+/* Theme-specific Overrides */
+
+/* Dark Mode Overrides (Default) */
+[data-theme="dark"] .text-muted,
+body:not([data-theme="light"]) .text-muted {
+    --bs-text-opacity: 1 !important;
+    color: rgb(92, 118, 229) !important;
+}
+[data-theme="dark"] .opacity,
+body:not([data-theme="light"]) .opacity {
+    opacity: 1 !important;
+}
+[data-theme="dark"] .small, 
+[data-theme="dark"] small,
+body:not([data-theme="light"]) .small,
+body:not([data-theme="light"]) small {
+    font-size: 1em !important;
+}
+
+/* Light Mode Overrides */
+[data-theme="light"] .text-muted {
+    --bs-text-opacity: 1 !important;
+    color: rgb(0, 0, 0) !important;
+}
+[data-theme="light"] .opacity {
+    opacity: 1 !important;
+}
+[data-theme="light"] .small, 
+[data-theme="light"] small {
+    font-size: 1em !important;
 }
 
 /* Enhanced Glassmorphism for Light Mode */
@@ -188,8 +220,52 @@ code {
     padding: 0.2rem 0.4rem;
 }
 
-/* Responsive adjustments */
+/* Optimized Offcanvas Sidebar */
+.offcanvas {
+    width: 75% !important;
+    background-color: var(--nav-bg) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-left: 1px solid var(--border-color) !important;
+    transition: transform 0.3s ease-in-out;
+}
+
+.offcanvas-title {
+    width: 100%;
+    text-align: center;
+    color: var(--text-main);
+    font-weight: bold;
+}
+
+/* Copyright and Footer styling */
+#query-copyright, 
+.offcanvas .mt-auto small {
+    pointer-events: none;
+    z-index: 1050;
+    font-size: 0.8rem;
+    padding: 10px;
+    opacity: 0.6;
+}
+
+[data-theme="light"] #query-copyright small,
+[data-theme="light"] .offcanvas .mt-auto small {
+    color: rgb(58, 63, 81) !important;
+}
+
+[data-theme="dark"] .sidebar-version-text {
+    color: #f1f5f9 !important; /* Increase visibility in dark mode */
+}
+
+[data-theme="light"] .sidebar-version-text {
+    color: #64748b !important;
+}
+
+/* Ensure mobile responsiveness for copyright */
 @media (max-width: 576px) {
+    #query-copyright {
+        display: none !important; /* Move it inside the sidebar for mobile */
+    }
+}
     .navbar-brand {
         font-size: 1.1rem;
         padding-right: 0.5rem;

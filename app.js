@@ -36,25 +36,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Theme Toggle Logic ---
     const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+    
     const currentTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
     updateThemeIcon(currentTheme);
 
-    themeToggle.addEventListener('click', () => {
+    const handleThemeToggle = () => {
         const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         updateThemeIcon(newTheme);
-    });
+    };
+
+    themeToggle.addEventListener('click', handleThemeToggle);
+    themeToggleMobile.addEventListener('click', handleThemeToggle);
 
     function updateThemeIcon(theme) {
-        const icon = themeToggle.querySelector('i');
+        const desktopIcon = themeToggle.querySelector('i');
+        const mobileIcon = themeToggleMobile.querySelector('.theme-icon-mobile');
+        
         if (theme === 'light') {
-            icon.className = 'bi bi-sun-fill';
+            desktopIcon.className = 'bi bi-sun-fill';
+            mobileIcon.className = 'bi bi-sun-fill theme-icon-mobile';
         } else {
-            icon.className = 'bi bi-moon-stars';
+            desktopIcon.className = 'bi bi-moon-stars';
+            mobileIcon.className = 'bi bi-moon-stars theme-icon-mobile';
         }
     }
+
+    // --- Logout Logic ---
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = 'auth.html';
+    };
+
+    document.getElementById('logout-button').addEventListener('click', handleLogout);
+    document.getElementById('logout-button-mobile').addEventListener('click', handleLogout);
 
     const authHeaders = {
         'Content-Type': 'application/json',
