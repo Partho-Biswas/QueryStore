@@ -12,26 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('toggle-password');
     const rememberMe = document.getElementById('remember-me');
 
-    // Password visibility toggle
-    if (togglePassword) {
-        togglePassword.addEventListener('click', function () {
-            const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            loginPasswordInput.setAttribute('type', type);
-            // Toggle the icon
-            const icon = this.querySelector('i');
-            icon.classList.toggle('bi-eye-slash');
-            icon.classList.toggle('bi-eye');
-        });
-    }
-    
-    // Load saved credentials if they exist
-    if (localStorage.getItem('rememberMe') === 'true') {
-        loginIdentifierInput.value = localStorage.getItem('loginIdentifier') || '';
-        loginPasswordInput.value = localStorage.getItem('loginPassword') || '';
-        rememberMe.checked = true;
-    }
-
-    // Reset Password Elements
+    // --- Reset Password Elements ---
     const resetForm = document.getElementById('reset-form');
     const resetEmailInput = document.getElementById('reset-email');
     const resetPasswordInput = document.getElementById('reset-password');
@@ -42,7 +23,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetTabButton = document.getElementById('pills-reset-tab');
     const loginTabButton = document.getElementById('pills-login-tab');
 
-    // Reset all forms and messages on page load for a "clean" state
+    // --- Core Functions ---
+
+    // Password visibility toggle
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function () {
+            const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            loginPasswordInput.setAttribute('type', type);
+            const icon = this.querySelector('i');
+            icon.classList.toggle('bi-eye-slash');
+            icon.classList.toggle('bi-eye');
+        });
+    }
+
+    const prefillRememberedUser = () => {
+        if (localStorage.getItem('rememberMe') === 'true') {
+            loginIdentifierInput.value = localStorage.getItem('loginIdentifier') || '';
+            loginPasswordInput.value = localStorage.getItem('loginPassword') || '';
+            rememberMe.checked = true;
+        }
+    };
+    
+    // Resets forms and messages
     const clearAllForms = () => {
         if (loginForm) loginForm.reset();
         if (signupForm) signupForm.reset();
@@ -53,14 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (resetSuccessDiv) resetSuccessDiv.textContent = '';
     };
 
-    clearAllForms();
+    const handleLoginSuccess = (data) => {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.user.username);
+        window.location.href = 'index.html';
+    };
 
-    // Clear forms whenever any tab is shown (Login, Signup, or Reset)
-    document.querySelectorAll('button[data-bs-toggle="pill"]').forEach(tabEl => {
-        tabEl.addEventListener('shown.bs.tab', () => {
-            clearAllForms();
-        });
-    });
+    // --- Page Initialization ---
 
     // Redirect if already logged in
     if (localStorage.getItem('token')) {
@@ -68,11 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const handleLoginSuccess = (data) => {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('username', data.user.username);
-        window.location.href = 'index.html';
-    };
+    // Clear forms whenever any tab is shown (Login, Signup, or Reset)
+    document.querySelectorAll('button[data-bs-toggle="pill"]').forEach(tabEl => {
+        tabEl.addEventListener('shown.bs.tab', (event) => {
+            clearAllForms();
+            // After clearing, if we are showing the login tab, pre-fill it.
+            if(event.target.id === 'pills-login-tab') {
+                prefillRememberedUser();
+            }
+        });
+    });
+
+    // Initial load: Pre-fill the login form if 'Remember Me' was checked
+    prefillRememberedUser();
+
 
     // --- Event Listeners ---
 
