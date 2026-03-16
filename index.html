@@ -12,14 +12,17 @@
     <script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center" href="#">
                 <img src="https://cdn-icons-png.flaticon.com/512/1265/1265531.png" alt="QueryStore Logo" height="24" class="me-2">
-                QueryStore <span id="welcome-message" class="ms-2 badge bg-primary"></span>
+                <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center">
+                    <span class="fw-bold">QueryStore</span>
+                    <span id="welcome-message" class="ms-sm-2 badge bg-primary mt-1 mt-sm-0" style="font-size: 0.75rem;"></span>
+                </div>
             </a>
-            <div class="d-flex">
-                <button class="btn btn-outline-light" id="logout-button">
+            <div class="ms-auto">
+                <button class="btn btn-sm btn-outline-light" id="logout-button">
                     <i class="bi bi-box-arrow-right"></i> Logout
                 </button>
             </div>
@@ -60,9 +63,9 @@
                         <!-- Tag buttons will be dynamically inserted here -->
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2>My Queries</h2>
-                    <div class="w-50">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3">
+                    <h2 class="mb-2 mb-sm-0">My Queries</h2>
+                    <div class="w-100 w-sm-50" style="max-width: 400px;">
                         <input type="text" class="form-control" id="search-box" placeholder="Search queries...">
                     </div>
                 </div>

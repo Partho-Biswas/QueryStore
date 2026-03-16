@@ -165,8 +165,34 @@ pre {
     border-radius: 5px;
     overflow-x: auto;
 }
-code {
-    color: #a0d468; /* Greenish for code */
-    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+        padding-right: 0.5rem;
+        flex-shrink: 1; /* Allow brand to shrink slightly if needed */
+    }
+    .navbar-brand img {
+        height: 20px; /* Smaller logo on mobile */
+    }
+    #welcome-message.badge {
+        font-size: 0.65rem !important; /* Smaller welcome badge */
+        white-space: normal; /* Allow badge text to wrap if username is very long */
+        text-align: left;
+    }
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    h2 {
+        font-size: 1.5rem; /* Smaller header on mobile */
+    }
+    .list-group-item h5 {
+        font-size: 1rem; /* Smaller query title */
+    }
+    .query-actions .btn {
+        padding: 0.25rem 0.4rem; /* Smaller action buttons on mobile */
+        font-size: 0.75rem;
+    }
 }
 
